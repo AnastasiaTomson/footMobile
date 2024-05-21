@@ -1,11 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'standing.freezed.dart';
-part 'standing.g.dart';
+part 'standings.freezed.dart';
+part 'standings.g.dart';
 
 @freezed
-class Standing with _$Standing {
-  factory Standing({
+class Standings with _$Standings {
+  factory Standings({
     required String teamName,
     String? logo,
     String? color,
@@ -15,7 +15,7 @@ class Standing with _$Standing {
     required int draws,
     required int points,
 
-  }) = _Standing;
+  }) = _Standings;
 
-  factory Standing.fromJson(Map<String, dynamic> json) => _$StandingFromJson(json);
+  factory Standings.fromJson(Map<String, dynamic> json) => _$StandingsFromJson(json);
 }

@@ -1,8 +1,8 @@
 name: foot_mobile
-description: "A new Flutter project."
+description: "ФанМяч"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'ФанМяч' # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -34,9 +34,11 @@ dependencies:
   dropdown_button2: ^2.3.9
   flutter_bloc: ^8.1.3
   flutter_hooks: ^0.20.3
+  flutter_launcher_icons: ^0.13.1
   freezed_annotation: ^2.4.1
   flutter_localizations:
     sdk: flutter
+  flutter_native_splash: ^2.3.6
   get_it: ^7.6.4
   go_router: ^14.1.1
   intl: ^0.18.1
@@ -64,6 +66,16 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/images/icon.png"
+
+flutter_native_splash:
+  color: "#181829"
+  image: assets/images/splash_screen.png
 
 # The following section is specific to Flutter packages.
 flutter:

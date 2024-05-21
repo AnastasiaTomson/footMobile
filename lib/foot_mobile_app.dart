@@ -4,7 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:foot_mobile/src/config/router/app_router.dart';
 import 'package:foot_mobile/src/config/themes/app_themes.dart';
 import 'package:foot_mobile/src/locator.dart';
-import 'package:foot_mobile/src/presentation/blocs/championships/championships_bloc.dart';
+import 'package:foot_mobile/src/presentation/blocs/leagues/leagues_bloc.dart';
 import 'package:foot_mobile/src/utils/constants.dart';
 
 class FootMobileApp extends StatelessWidget {
@@ -14,7 +14,7 @@ class FootMobileApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (_) => locator<ChampionshipsBloc>(),
+        create: (_) => locator<LeaguesBloc>(),
         child: MaterialApp.router(
           routerConfig: router,
           debugShowCheckedModeBanner: false,

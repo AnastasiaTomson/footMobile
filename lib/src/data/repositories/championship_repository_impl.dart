@@ -2,7 +2,7 @@ import 'package:foot_mobile/src/data/data_source/remote/championship_service.dar
 import 'package:foot_mobile/src/domain/interfaces/championship_repository.dart';
 import 'package:foot_mobile/src/domain/models/league.dart';
 import 'package:foot_mobile/src/domain/models/season.dart';
-import 'package:foot_mobile/src/domain/models/standing.dart';
+import 'package:foot_mobile/src/domain/models/standings.dart';
 import 'package:foot_mobile/src/locator.dart';
 
 class ChampionshipRepositoryImpl implements ChampionshipRepository {
@@ -27,7 +27,7 @@ class ChampionshipRepositoryImpl implements ChampionshipRepository {
   }
 
   @override
-  Future<List<Standing>> getStandings(String leagueId, String season) async {
+  Future<List<Standings>> getStandings(String leagueId, String season) async {
     try {
       return await footballService.getStandings(leagueId, season);
     } catch (e) {

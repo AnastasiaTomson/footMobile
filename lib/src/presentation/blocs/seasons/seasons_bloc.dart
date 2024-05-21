@@ -12,6 +12,7 @@ class SeasonsBloc extends Bloc<SeasonsEvent, SeasonsState> {
 
   SeasonsBloc() : super(SeasonsInitial()) {
     on<GetSeasons>((event, emit) async{
+      emit(SeasonsInitial());
       List<Season> seasons = await championshipRepository.getSeasons(event.leagueId);
       seasons.isNotEmpty ? emit(SeasonsReceived(seasons)) : emit(SeasonsNotReceived());
     });

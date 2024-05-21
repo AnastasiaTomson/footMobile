@@ -4,13 +4,13 @@ import 'package:foot_mobile/src/domain/models/league.dart';
 import 'package:foot_mobile/src/locator.dart';
 import 'package:meta/meta.dart';
 
-part 'championships_event.dart';
-part 'championships_state.dart';
+part 'leagues_event.dart';
+part 'leagues_state.dart';
 
-class ChampionshipsBloc extends Bloc<ChampionshipsEvent, ChampionshipsState> {
+class LeaguesBloc extends Bloc<LeaguesEvent, LeaguesState> {
   ChampionshipRepository championshipRepository = locator<ChampionshipRepository>();
 
-  ChampionshipsBloc() : super(ChampionshipsInitial()) {
+  LeaguesBloc() : super(LeaguesInitial()) {
     on<GetLeagues>((event, emit) async {
       List<League> leagues = await championshipRepository.getLeagues();
       leagues.isNotEmpty ? emit(LeaguesReceived(leagues)) : emit(LeaguesNotReceived());

@@ -2,7 +2,7 @@
 import 'package:dio/dio.dart';
 import 'package:foot_mobile/src/domain/models/league.dart';
 import 'package:foot_mobile/src/domain/models/season.dart';
-import 'package:foot_mobile/src/domain/models/standing.dart';
+import 'package:foot_mobile/src/domain/models/standings.dart';
 import 'package:foot_mobile/src/locator.dart';
 import 'package:foot_mobile/src/utils/constants.dart';
 
@@ -37,12 +37,12 @@ class FootballService {
     }
   }
 
-  Future<List<Standing>> getStandings(String leagueId, String season) async {
+  Future<List<Standings>> getStandings(String leagueId, String season) async {
     try {
       var response = await dio.get('$baseApiUrl/leagues/$leagueId/standings?season=$season&sort=asc');
       if (response.statusCode == 200) {
         List<dynamic> data = response.data['data']['standings'];
-        return List.generate(data.length, (index) => Standing.fromJson({
+        return List.generate(data.length, (index) => Standings.fromJson({
           'teamName': data[index]['team']['shortDisplayName'],
           'logo': data[index]['team'].containsKey('logos') ? data[index]['team']['logos'][0]['href'] : null,
           'color': data[index].containsKey('note') ? data[index]['note']['color'] : null,

@@ -1,5 +1,5 @@
 // Material
-const String materialAppTitle = 'FootMobile';
+const String materialAppTitle = 'ФанМяч';
 
 // Service
 const String baseApiUrl = 'https://api-football-standings.azharimm.dev';

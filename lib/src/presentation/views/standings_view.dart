@@ -4,15 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:foot_mobile/src/domain/models/league.dart';
 import 'package:foot_mobile/src/locator.dart';
-import 'package:foot_mobile/src/presentation/blocs/championship/championship_bloc.dart';
-import 'package:foot_mobile/src/presentation/blocs/championships/championships_bloc.dart';
+import 'package:foot_mobile/src/presentation/blocs/leagues/leagues_bloc.dart';
 import 'package:foot_mobile/src/presentation/blocs/seasons/seasons_bloc.dart';
+import 'package:foot_mobile/src/presentation/blocs/standings/standings_bloc.dart';
+import 'package:foot_mobile/src/presentation/views/widgets/standings_widget.dart';
 import 'package:foot_mobile/src/utils/custom_icons_icons.dart';
-import 'package:foot_mobile/src/utils/extensions.dart';
 import 'package:go_router/go_router.dart';
 
-class ChampionshipView extends HookWidget {
-  const ChampionshipView({super.key, required this.id});
+class StandingView extends HookWidget {
+  const StandingView({super.key, required this.id});
 
   final String id;
 
@@ -25,16 +25,16 @@ class ChampionshipView extends HookWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(
-          value: locator<ChampionshipsBloc>(),
+          value: locator<LeaguesBloc>(),
         ),
-        BlocProvider<ChampionshipBloc>(
-          create: (context) => locator<ChampionshipBloc>(),
+        BlocProvider<SeasonsBloc>(
+          create: (context) => locator<SeasonsBloc>()..add(GetSeasons(id)),
         ),
-        BlocProvider.value(
-          value: locator<SeasonsBloc>()..add(GetSeasons(id)),
+        BlocProvider<StandingsBloc>(
+          create: (context) => locator<StandingsBloc>(),
         ),
       ],
-      child: BlocBuilder<ChampionshipsBloc, ChampionshipsState>(
+      child: BlocBuilder<LeaguesBloc, LeaguesState>(
         builder: (leagueContext, leagueState) {
           if (leagueState is LeaguesReceived){
             currentLeague = leagueState.leagues.firstWhere((league) => league.id == id);
@@ -49,22 +49,21 @@ class ChampionshipView extends HookWidget {
                   onPressed: () => context.pop(),
                 ),
                 backgroundColor: theme.value.scaffoldBackgroundColor,
-                centerTitle: true,
                 toolbarHeight: 80,
                 title: Text(
-                  currentLeague != null ? currentLeague!.abbr : '',
-                  style: theme.value.primaryTextTheme.titleMedium,
+                  currentLeague != null ? currentLeague!.name : '',
+                  style: theme.value.primaryTextTheme.bodyLarge,
                 ),
               ),
               body: Padding(
-                padding: EdgeInsets.all(25),
-                child: BlocBuilder<ChampionshipBloc, ChampionshipState>(
-                  builder: (standingContext, standingState) {
+                padding: EdgeInsets.all(20),
+                child: BlocBuilder<StandingsBloc, StandingsState>(
+                  builder: (standingsContext, standingsState) {
                     return BlocBuilder<SeasonsBloc, SeasonsState>(
                       builder: (seasonContext, seasonState){
                         if (seasonState is SeasonsReceived) {
-                          if (standingState is! StandingsReceived) {
-                            BlocProvider.of<ChampionshipBloc>(standingContext)
+                          if (standingsState is! StandingsReceived) {
+                            BlocProvider.of<StandingsBloc>(standingsContext)
                                 .add(GetStandings(
                                     id,
                                     seasonState.seasons[seasonIndex.value].year
@@ -74,19 +73,18 @@ class ChampionshipView extends HookWidget {
                             children: [
                               DropdownButtonFormField2(
                                 value: seasonIndex.value,
-                                items: [
-                                  for (int index=0; index < seasonState.seasons.length; index++)
-                                    DropdownMenuItem(
+                                items: List.generate(seasonState.seasons.length,
+                                    (index) => DropdownMenuItem(
                                       value: index,
                                       child: Text(
-                                        seasonState.seasons[index].year.toString(),
+                                        seasonState.seasons[index].displayName,
                                         style: theme.value.primaryTextTheme.bodyMedium,
                                       ),
                                     )
-                                ],
+                                  ),
                                 onChanged: (value){
                                   seasonIndex.value = value!;
-                                  BlocProvider.of<ChampionshipBloc>(standingContext).add(GetStandings(id, seasonState.seasons[seasonIndex.value].year.toString()));
+                                  BlocProvider.of<StandingsBloc>(standingsContext).add(GetStandings(id, seasonState.seasons[seasonIndex.value].year.toString()));
                                 },
                                 style: theme.value.primaryTextTheme.bodyMedium,
                                 iconStyleData: IconStyleData(
@@ -128,12 +126,6 @@ class ChampionshipView extends HookWidget {
                                 ),
                               ),
                               SizedBox(height: 30),
-                              Text(
-                                seasonState.seasons[seasonIndex.value].displayName,
-                                textAlign: TextAlign.center,
-                                style: theme.value.primaryTextTheme.bodyLarge,
-                              ),
-                              SizedBox(height: 25),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
@@ -207,95 +199,13 @@ class ChampionshipView extends HookWidget {
                               ),
                               SizedBox(height: 10),
                               Expanded(
-                                child: standingState is StandingsReceived ?
-                                  ListView.separated(
-                                    separatorBuilder: (context, index) => SizedBox(height: 8),
-                                    itemCount: standingState.standings.length,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                        decoration: BoxDecoration(
-                                            color: standingState.standings[index].color != null ? standingState.standings[index].color!.toColor().withOpacity(.3) : Colors.transparent,
-                                            borderRadius: BorderRadius.circular(10)
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 20,
-                                              child: Text(
-                                                (index+1).toString(),
-                                                textAlign: TextAlign.center,
-                                                style: theme.value.primaryTextTheme.bodyMedium,
-                                              ),
-                                            ),
-                                            SizedBox(width: 4),
-                                            Expanded(
-                                              child: Row(
-                                                children: [
-                                                  if (standingState.standings[index].logo != null)
-                                                    Image.network(standingState.standings[index].logo!, width: 16),
-                                                  SizedBox(width: 8),
-                                                  Text(
-                                                    standingState.standings[index].teamName,
-                                                    style: theme.value.primaryTextTheme.bodyMedium,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(width: 8),
-                                            SizedBox(
-                                              width: 20,
-                                              child: Text(
-                                                standingState.standings[index].gamesPlayed.toString(),
-                                                textAlign: TextAlign.center,
-                                                style: theme.value.primaryTextTheme.bodyMedium,
-                                              ),
-                                            ),
-                                            SizedBox(width: 8),
-                                            SizedBox(
-                                              width: 20,
-                                              child: Text(
-                                                standingState.standings[index].wins.toString(),
-                                                textAlign: TextAlign.center,
-                                                style: theme.value.primaryTextTheme.bodyMedium,
-                                              ),
-                                            ),
-                                            SizedBox(width: 8),
-                                            SizedBox(
-                                              width: 20,
-                                              child: Text(
-                                                standingState.standings[index].draws.toString(),
-                                                textAlign: TextAlign.center,
-                                                style: theme.value.primaryTextTheme.bodyMedium,
-                                              ),
-                                            ),
-                                            SizedBox(width: 8),
-                                            SizedBox(
-                                              width: 20,
-                                              child: Text(
-                                                standingState.standings[index].losses.toString(),
-                                                textAlign: TextAlign.center,
-                                                style: theme.value.primaryTextTheme.bodyMedium,
-                                              ),
-                                            ),
-                                            SizedBox(width: 8),
-                                            SizedBox(
-                                              width: 20,
-                                              child: Text(
-                                                standingState.standings[index].points.toString(),
-                                                textAlign: TextAlign.center,
-                                                style: theme.value.primaryTextTheme.bodyMedium,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ) : Center(
-                                      child: CircularProgressIndicator(
-                                        color: theme.value.primaryColor.withOpacity(.5),
-                                      )
+                                child: standingsState is StandingsReceived
+                                  ? StandingsWidget(standings: standingsState.standings)
+                                  : Center(
+                                    child: CircularProgressIndicator(
+                                      color: theme.value.primaryColor.withOpacity(.5),
                                     )
+                                  )
                               )
                             ],
                           );

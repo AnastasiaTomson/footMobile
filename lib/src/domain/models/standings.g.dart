@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'standing.dart';
+part of 'standings.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$StandingImpl _$$StandingImplFromJson(Map<String, dynamic> json) =>
-    _$StandingImpl(
+_$StandingsImpl _$$StandingsImplFromJson(Map<String, dynamic> json) =>
+    _$StandingsImpl(
       teamName: json['teamName'] as String,
       logo: json['logo'] as String?,
       color: json['color'] as String?,
@@ -18,7 +18,7 @@ _$StandingImpl _$$StandingImplFromJson(Map<String, dynamic> json) =>
       points: (json['points'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$StandingImplToJson(_$StandingImpl instance) =>
+Map<String, dynamic> _$$StandingsImplToJson(_$StandingsImpl instance) =>
     <String, dynamic>{
       'teamName': instance.teamName,
       'logo': instance.logo,
